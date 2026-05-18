@@ -9,42 +9,59 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++20 -g -MMD -MP \
 	-I./Systems \
 	-I./World 
 
-LDFLAGS = \
-	$(RAYLIB_PATH)/build/raylib/libraylib.a \
-	-lGL -lm -lpthread -ldl -lrt -lX11
 BUILD_DIR = build
 
-# Find all cpp files recursively
+# ---- Submodule setup marker ----
+SUBMODULE_MARKER := .submodules_ok
+
+# ---- Raylib build (CMake-based) ----
+RAYLIB_BUILD_DIR = $(RAYLIB_PATH)/build
+RAYLIB_LIB = $(RAYLIB_BUILD_DIR)/raylib/libraylib.a
+
+# ---- Source files ----
 SRCS := $(shell find . \
 	-path ./build -prune -o \
 	-path ./raylib -prune -o \
 	-type f -name "*.cpp" -print)
 
-# Convert:
-# src/foo.cpp -> build/src/foo.o
 OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 DEPS := $(OBJS:.o=.d)
 
+# ---- Default target ----
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CXX) $(OBJS) -o $(NAME) $(LDFLAGS)
+# ---- Submodule setup (runs once) ----
+$(SUBMODULE_MARKER):
+	git submodule update --init --recursive
+	@touch $(SUBMODULE_MARKER)
 
-# Compile rule
+# ---- Build raylib using CMake ----
+$(RAYLIB_LIB): $(SUBMODULE_MARKER)
+	mkdir -p $(RAYLIB_BUILD_DIR)
+	cmake -S $(RAYLIB_PATH) -B $(RAYLIB_BUILD_DIR)
+	cmake --build $(RAYLIB_BUILD_DIR)
+
+# ---- Build final binary ----
+$(NAME): $(RAYLIB_LIB) $(OBJS)
+	$(CXX) $(OBJS) -o $(NAME) $(RAYLIB_LIB) -lGL -lm -lpthread -ldl -lrt -lX11
+
+# ---- Compile rule ----
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# ---- Cleanup ----
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -rf $(RAYLIB_BUILD_DIR)
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f $(SUBMODULE_MARKER)
 
 re: fclean all
 
-# Run:
-# make valgrind ARGS="file.txt"
+# ---- Run valgrind ----
 valgrind: $(NAME)
 	valgrind \
 		--leak-check=full \
@@ -52,7 +69,7 @@ valgrind: $(NAME)
 		--show-leak-kinds=all \
 		./$(NAME) $(ARGS)
 
-# Include generated dependency files
+# ---- Dependencies ----
 -include $(DEPS)
 
 .PHONY: all clean fclean re valgrind
