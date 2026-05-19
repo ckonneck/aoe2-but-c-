@@ -1,0 +1,148 @@
+#include "UI.hpp"
+
+void UIButton::Draw() const
+{
+    DrawRectangleRec(rect, GRAY);
+
+    int fontSize = 30;
+    int textWidth = MeasureText(label, fontSize);
+
+    DrawText(
+        label,
+        rect.x + rect.width / 2 - textWidth / 2,
+        rect.y + rect.height / 2 - fontSize / 2,
+        fontSize,
+        WHITE
+    );
+}
+
+void UIButton::HandleInput()
+{
+
+}
+
+void UI::SetPanel(Rectangle p)
+{
+    panel = p;
+}
+
+void UI::AddButton(const UIButton& button)
+{
+    buttons.push_back(button);
+}
+
+void UI::Update()
+{
+    panel.x = 0;
+    panel.y = GetScreenHeight() - 115;
+    panel.width = GetScreenWidth();
+    panel.height = 115;
+
+    float padding = 20.0f;
+    float size = 50.0f;
+
+    float startX = panel.x + padding;
+    float centerY = panel.y + (panel.height / 2.0f) - (size / 2.0f);
+
+    for (size_t i = 0; i < buttons.size(); i++)
+    {
+        buttons[i].rect.x = startX + i * (size + padding);
+        buttons[i].rect.y = centerY;
+        buttons[i].rect.width = size;
+        buttons[i].rect.height = size;
+    }
+
+    // input handling
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        Vector2 mouse = GetMousePosition();
+
+        for (UIButton& b : buttons)
+        {
+            if (CheckCollisionPointRec(mouse, b.rect))
+            {
+                if (b.onClick)
+                    b.onClick();
+            }
+        }
+    }
+}
+
+void UI::Render()
+{
+    DrawRectangleRec(panel, DARKGRAY);
+
+    // TITLE SECTION
+    if (selectedBuilding)
+    {
+        const char* name = selectedBuilding->GetDefinition().name.c_str(); // or .name
+
+        DrawText(
+            name,
+            panel.x + 20,
+            panel.y - 21,
+            25,
+            WHITE
+        );
+    }
+
+    // BUTTONS
+    for (const UIButton& b : buttons)
+        b.Draw();
+}
+
+void UI::Init()
+{
+    buttons.clear();
+
+    // UI layout could be defined here later
+    // but NOT game-specific buttons
+
+    panel = {0,0,0,0};
+}
+
+
+void UI::SetSelectedBuilding(Building* b)
+{
+    selectedBuilding = b;
+    Rebuild();
+}
+
+void UI::Rebuild()
+{
+
+
+	buttons.clear();
+	
+    if (!selectedBuilding)
+        return;
+
+    const BuildingDefinition& def = selectedBuilding->GetDefinition();
+
+    if (def.name == "Stables")
+    {
+        UIButton knight;
+        knight.label = "K";
+
+		knight.onClick = [this]()
+		{
+			requestSpawnUnit(selectedBuilding, UnitType::Knight);
+		};
+
+        buttons.push_back(knight);
+    }
+    else if (def.name == "Barracks")
+    {
+        UIButton infantry;
+        infantry.label = "I";
+
+        buttons.push_back(infantry);
+    }
+}
+
+bool UI::IsMouseInside() const
+{
+    Vector2 mouse = GetMousePosition();
+
+    return CheckCollisionPointRec(mouse, panel);
+}

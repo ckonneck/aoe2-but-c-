@@ -4,24 +4,20 @@
 #include "World.hpp"
 
 
-enum class UnitState
+enum class BuildingState
 {
     Idle,
-    Moving,
-    Attacking,
-    Gathering,
-    // Building,
-    // Dying
+	Producing
 };
 
-enum class UnitType
+enum class BuildingType
 {
-    Villager,
-    Knight,
-    Archer
+    Stables,
+    Towncenter,
+    Tower
 };
 
-class UnitDefinition
+class BuildingDefinition
 {
 	public:
 		std::string name;
@@ -34,39 +30,38 @@ class UnitDefinition
 		Texture2D texture;
 };
 
-class Unit
+class Building
 {
 	public:
-		Unit(UnitType type, Vector2 spawnPosition);
+		Building(BuildingType type, Vector2 spawnPosition);
 		void Update(float dt);
 		void Render();
-		void Move(float dt);
-		void Gather(float dt);
-		void Attack(float dt);
+		void Producing(float dt);
 		bool Contains(Vector2 point) const;
     	void SetSelected(bool value);
 		bool IsSelected();
 		void SetTarget(Vector2 newTarget);
-    	void SetState(UnitState newState);
+    	void SetState(BuildingState newState);
 		bool IsInside(Rectangle rect) const;
-		Vector2 GetPosition() const;
+		const BuildingDefinition& GetDefinition() const;
+		Vector2 GetSpawnPosition() const;
 	private:
 		Vector2 position;
 		Vector2 target;
 		float hp;
 		float speed;
 		bool selected = false;
-		UnitState state;
-		const UnitDefinition* definition;
+		BuildingState state;
+		const BuildingDefinition* definition;
 };
 
-class UnitDatabase
+class BuildingDatabase
 {
 	public:
 		static void Init();
-		static const UnitDefinition& Get(UnitType type);
+		static const BuildingDefinition& Get(BuildingType type);
 
 	private:
-		static std::unordered_map<UnitType, UnitDefinition> data;
+		static std::unordered_map<BuildingType, BuildingDefinition> data;
 };
 

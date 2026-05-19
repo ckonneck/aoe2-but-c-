@@ -7,14 +7,14 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++20 -g -MMD -MP \
 	-I$(RAYLIB_PATH)/src \
 	-I./Renderer \
 	-I./Systems \
-	-I./World 
+	-I./World
 
 BUILD_DIR = build
 
 # ---- Submodule setup marker ----
 SUBMODULE_MARKER := .submodules_ok
 
-# ---- Raylib build (CMake-based) ----
+# ---- Raylib build ----
 RAYLIB_BUILD_DIR = $(RAYLIB_PATH)/build
 RAYLIB_LIB = $(RAYLIB_BUILD_DIR)/raylib/libraylib.a
 
@@ -30,20 +30,26 @@ DEPS := $(OBJS:.o=.d)
 # ---- Default target ----
 all: $(NAME)
 
-# ---- Submodule setup (runs once) ----
+# ---- Ensure submodules exist (runs once) ----
 $(SUBMODULE_MARKER):
 	git submodule update --init --recursive
 	@touch $(SUBMODULE_MARKER)
 
-# ---- Build raylib using CMake ----
+# ---- Build raylib only if missing ----
 $(RAYLIB_LIB): $(SUBMODULE_MARKER)
-	mkdir -p $(RAYLIB_BUILD_DIR)
-	cmake -S $(RAYLIB_PATH) -B $(RAYLIB_BUILD_DIR)
-	cmake --build $(RAYLIB_BUILD_DIR)
+	@if [ ! -f "$(RAYLIB_LIB)" ]; then \
+		echo "Building raylib..."; \
+		mkdir -p $(RAYLIB_BUILD_DIR); \
+		cmake -S $(RAYLIB_PATH) -B $(RAYLIB_BUILD_DIR); \
+		cmake --build $(RAYLIB_BUILD_DIR); \
+	else \
+		echo "raylib already built"; \
+	fi
 
 # ---- Build final binary ----
 $(NAME): $(RAYLIB_LIB) $(OBJS)
-	$(CXX) $(OBJS) -o $(NAME) $(RAYLIB_LIB) -lGL -lm -lpthread -ldl -lrt -lX11
+	$(CXX) $(OBJS) -o $(NAME) $(RAYLIB_LIB) \
+		-lGL -lm -lpthread -ldl -lrt -lX11
 
 # ---- Compile rule ----
 $(BUILD_DIR)/%.o: %.cpp
@@ -53,11 +59,14 @@ $(BUILD_DIR)/%.o: %.cpp
 # ---- Cleanup ----
 clean:
 	rm -rf $(BUILD_DIR)
-	rm -rf $(RAYLIB_BUILD_DIR)
 
 fclean: clean
 	rm -f $(NAME)
 	rm -f $(SUBMODULE_MARKER)
+
+# ---- Full dependency rebuild (optional) ----
+distclean: fclean
+	rm -rf $(RAYLIB_BUILD_DIR)
 
 re: fclean all
 
@@ -72,4 +81,4 @@ valgrind: $(NAME)
 # ---- Dependencies ----
 -include $(DEPS)
 
-.PHONY: all clean fclean re valgrind
+.PHONY: all clean fclean re distclean valgrind
