@@ -12,9 +12,9 @@ class UIButton
 public:
     Rectangle rect;
     const char* label;
-
+    float progress = -1.0f;
     std::function<void()> onClick;
-
+    int queuedCount = 0;
     void Draw() const;
     void HandleInput();
 };

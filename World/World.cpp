@@ -20,9 +20,16 @@ void World::Update(float dt)
 {
 	
 	for (Building& building : buildings)
-	{
-		building.Update(dt);
-	}
+    {
+        building.Update(dt);
+        if (building.IsProductionFinished())
+        {
+            SpawnUnitFromBuilding(&building,building.GetQueuedUnit());
+            //need to place an if here, see if a space if free, if not,
+            // basically wait until one becomes available
+            building.ClearProduction();
+        }
+    }
     for (Unit& unit : units)
     {
         unit.Update(dt);

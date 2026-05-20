@@ -14,6 +14,40 @@ void UIButton::Draw() const
         fontSize,
         WHITE
     );
+
+    if (queuedCount > 0)
+    {
+        DrawText(
+            TextFormat("%d", queuedCount),
+            rect.x + rect.width - 12,
+            rect.y - 5,
+            18,
+            WHITE
+        );
+    }
+    if (progress >= 0.0f)
+    {
+        const float barHeight = 5.0f;
+
+        Rectangle bg =
+        {
+            rect.x,
+            rect.y - 10,
+            rect.width,
+            barHeight
+        };
+
+        Rectangle fill =
+        {
+            rect.x,
+            rect.y - 10,
+            rect.width * progress,
+            barHeight
+        };
+
+        DrawRectangleRec(bg, DARKGRAY);
+        DrawRectangleRec(fill, GREEN);
+    }
 }
 
 void UIButton::HandleInput()
@@ -52,6 +86,26 @@ void UI::Update()
         buttons[i].rect.height = size;
     }
 
+    if (selectedBuilding &&
+        !buttons.empty())
+    {
+        const BuildingDefinition& def =
+            selectedBuilding
+            ->GetDefinition();
+
+        if (def.name == "Stables")
+        {
+            buttons[0].progress =
+                selectedBuilding
+                ->GetProductionProgress();
+
+            buttons[0].queuedCount =
+                selectedBuilding
+                ->GetQueuedCount(
+                    UnitType::Knight
+                );
+        }
+    }
     // input handling
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
@@ -111,7 +165,6 @@ void UI::SetSelectedBuilding(Building* b)
 void UI::Rebuild()
 {
 
-
 	buttons.clear();
 	
     if (!selectedBuilding)
@@ -124,10 +177,13 @@ void UI::Rebuild()
         UIButton knight;
         knight.label = "K";
 
-		knight.onClick = [this]()
-		{
-			requestSpawnUnit(selectedBuilding, UnitType::Knight);
-		};
+        knight.onClick = [this]()
+        {
+            selectedBuilding
+            ->QueueUnit(
+                UnitType::Knight
+            );
+        };
 
         buttons.push_back(knight);
     }

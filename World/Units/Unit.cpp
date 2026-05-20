@@ -11,7 +11,6 @@ Unit::Unit(UnitType type, Vector2 spawnPosition)
 
     hp = definition->maxHp;
     speed = definition->moveSpeed;
-
     state = UnitState::Idle;
 }
 
@@ -43,6 +42,7 @@ void UnitDatabase::Init()
         60.f,
         3.f,
         1.5f,
+        3.0f,
         LoadTexture("World/Assets/villager.png")
     };
 
@@ -52,6 +52,7 @@ void UnitDatabase::Init()
         300.f,
         10.f,
         1.8f,
+        2.0f,
         LoadTexture("World/Assets/knight.png")
     };
 
@@ -61,6 +62,7 @@ void UnitDatabase::Init()
         70.f,
         6.f,
         6.0f,
+        3.0f,
         LoadTexture("World/Assets/archer.png")
     };
 }

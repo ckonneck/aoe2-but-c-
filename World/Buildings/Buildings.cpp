@@ -10,7 +10,8 @@ Building::Building(BuildingType type, Vector2 spawnPosition)
 
     position = spawnPosition;
     target = spawnPosition;
-
+    productionTimer = 0.0f;
+    productionDuration = 0.0f;
     hp = definition->maxHp;
     speed = definition->moveSpeed;
 
@@ -25,7 +26,37 @@ void Building::Render()
         (int)position.y,
         WHITE
     );
+    if (state == BuildingState::Producing)
+    {
+        float progress =
+            GetProductionProgress();
 
+        const float barWidth = 50.0f;
+        const float barHeight = 6.0f;
+        float barX =
+            position.x +
+            definition->texture.width / 2.0f -
+            barWidth / 2.0f;
+        Rectangle background =
+        {
+            barX,
+            position.y - 15,
+            barWidth,
+            barHeight
+        };
+
+        Rectangle fill =
+        {
+            barX,
+            position.y - 15,
+            barWidth * progress,
+            barHeight
+        };
+
+        DrawRectangleRec(background, DARKGRAY);
+        DrawRectangleRec(fill, GREEN);
+        DrawRectangleLinesEx(background, 1, BLACK);
+    }
 	if (selected)
     {
         DrawRectangleLines(

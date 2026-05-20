@@ -30,7 +30,7 @@ class UnitDefinition
 		float moveSpeed;
 		float attackDamage;
 		float attackRange;
-
+		float productionTime;
 		Texture2D texture;
 };
 
@@ -51,6 +51,7 @@ class Unit
 		bool IsInside(Rectangle rect) const;
 		Vector2 GetPosition() const;
 	private:
+		
 		Vector2 position;
 		Vector2 target;
 		float hp;
