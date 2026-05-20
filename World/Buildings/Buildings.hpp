@@ -4,6 +4,7 @@
 #include "World.hpp"
 #include "Units/Unit.hpp"
 #include <queue>
+#include <vector>
 class Unit;
 enum class UnitType;
 
@@ -31,6 +32,7 @@ class BuildingDefinition
 		float attackRange;
 
 		Texture2D texture;
+		std::vector<UnitType>producibleUnits;
 };
 
 class Building

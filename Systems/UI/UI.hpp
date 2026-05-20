@@ -4,19 +4,20 @@
 #include <functional>
 #include <vector>
 #include "Buildings/Buildings.hpp"
-
+#include "World.hpp"
 class Building;
 
 class UIButton
 {
 public:
     Rectangle rect;
-    const char* label;
+    std::string label;
     float progress = -1.0f;
     std::function<void()> onClick;
     int queuedCount = 0;
     void Draw() const;
     void HandleInput();
+    UnitType unitType;
 };
 
 class UI

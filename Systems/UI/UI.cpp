@@ -5,10 +5,10 @@ void UIButton::Draw() const
     DrawRectangleRec(rect, GRAY);
 
     int fontSize = 30;
-    int textWidth = MeasureText(label, fontSize);
+    int textWidth = MeasureText(label.c_str(), fontSize);
 
     DrawText(
-        label,
+        label.c_str(),
         rect.x + rect.width / 2 - textWidth / 2,
         rect.y + rect.height / 2 - fontSize / 2,
         fontSize,
@@ -184,33 +184,23 @@ void UI::Rebuild()
 
     const BuildingDefinition& def = selectedBuilding->GetDefinition();
 
-    if (def.name == "Stables")
+    for (UnitType type : def.producibleUnits)
     {
-        UIButton knight;
-        knight.label = "K";
+        UIButton button;
 
-        knight.onClick = [this]()
+        button.unitType = type;
+
+        const UnitDefinition& unitDef = UnitDatabase::Get(type);
+
+        button.label = unitDef.name.c_str()[0];
+
+        button.onClick = [this, type]()
         {
             selectedBuilding
-            ->QueueUnit(
-                UnitType::Knight
-            );
+            ->QueueUnit(type);
         };
 
-        buttons.push_back(knight);
-    }
-    else if (def.name == "Towncenter")
-    {
-        UIButton villager;
-        villager.label = "V";
-        villager.onClick = [this]()
-        {
-            selectedBuilding
-            ->QueueUnit(
-                UnitType::Villager
-            );
-        };
-        buttons.push_back(villager);
+        buttons.push_back(button);
     }
 
 }

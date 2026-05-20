@@ -77,7 +77,10 @@ void BuildingDatabase::Init()
         60.f,
         3.f,
         1.5f,
-        LoadTexture("World/Assets/Stable.png")
+        LoadTexture("World/Assets/Stable.png"),
+        {
+            UnitType::Knight
+        }
     };
 
     data[BuildingType::Towncenter] = {
@@ -86,7 +89,10 @@ void BuildingDatabase::Init()
         90.f,
         10.f,
         1.8f,
-        LoadTexture("World/Assets/Towncenter.png")
+        LoadTexture("World/Assets/Towncenter.png"),
+        {
+        UnitType::Villager
+        }
     };
 
     data[BuildingType::Tower] = {
@@ -95,7 +101,10 @@ void BuildingDatabase::Init()
         70.f,
         6.f,
         6.0f,
-        LoadTexture("World/Assets/tower.png")
+        LoadTexture("World/Assets/tower.png"),
+        {
+            
+        }
     };
 }
 
