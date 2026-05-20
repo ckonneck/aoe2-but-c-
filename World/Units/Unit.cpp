@@ -43,7 +43,7 @@ void UnitDatabase::Init()
         3.f,
         1.5f,
         3.0f,
-        LoadTexture("World/Assets/villager.png")
+        LoadTexture("World/Assets/Villager.png")
     };
 
     data[UnitType::Knight] = {
@@ -53,7 +53,7 @@ void UnitDatabase::Init()
         10.f,
         1.8f,
         2.0f,
-        LoadTexture("World/Assets/knight.png")
+        LoadTexture("World/Assets/Knight.png")
     };
 
     data[UnitType::Archer] = {

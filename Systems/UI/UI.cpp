@@ -105,6 +105,18 @@ void UI::Update()
                     UnitType::Knight
                 );
         }
+        if (def.name == "Towncenter")
+        {
+            buttons[0].progress =
+                selectedBuilding
+                ->GetProductionProgress();
+
+            buttons[0].queuedCount =
+                selectedBuilding
+                ->GetQueuedCount(
+                    UnitType::Villager
+                );
+        }
     }
     // input handling
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
@@ -187,13 +199,20 @@ void UI::Rebuild()
 
         buttons.push_back(knight);
     }
-    else if (def.name == "Barracks")
+    else if (def.name == "Towncenter")
     {
-        UIButton infantry;
-        infantry.label = "I";
-
-        buttons.push_back(infantry);
+        UIButton villager;
+        villager.label = "V";
+        villager.onClick = [this]()
+        {
+            selectedBuilding
+            ->QueueUnit(
+                UnitType::Villager
+            );
+        };
+        buttons.push_back(villager);
     }
+
 }
 
 bool UI::IsMouseInside() const

@@ -1,9 +1,14 @@
 #include "World.hpp"
 void World::Init()
 {
-    SpawnUnit(UnitType::Knight, Vector2{800, 300});
-	SpawnBuilding(BuildingType::Stables, Vector2{200, 200});
-
+    SpawnUnit(UnitType::Villager, Vector2{700, 300});
+    SpawnUnit(UnitType::Villager, Vector2{800, 300});
+    SpawnUnit(UnitType::Villager, Vector2{900, 300});
+    SpawnUnit(UnitType::Villager, Vector2{600, 300});
+    SpawnUnit(UnitType::Villager, Vector2{1000, 300});
+	SpawnBuilding(BuildingType::Towncenter, Vector2{200, 200});
+    SpawnBuilding(BuildingType::Towncenter, Vector2{400, 400});
+    SpawnBuilding(BuildingType::Stables, Vector2{600, 600});
 }
 
 void World::SpawnUnit(UnitType type, Vector2 position)
@@ -24,10 +29,11 @@ void World::Update(float dt)
         building.Update(dt);
         if (building.IsProductionFinished())
         {
-            SpawnUnitFromBuilding(&building,building.GetQueuedUnit());
-            //need to place an if here, see if a space if free, if not,
-            // basically wait until one becomes available
-            building.ClearProduction();
+            bool spawned = SpawnUnitFromBuilding(&building,building.GetQueuedUnit());
+            if (spawned)
+            {
+                building.ClearProduction();
+            }
         }
     }
     for (Unit& unit : units)
@@ -213,7 +219,7 @@ Building* World::GetSelectedBuilding()
     return nullptr;
 }
 
-void World::SpawnUnitFromBuilding(Building* b, UnitType type)
+bool World::SpawnUnitFromBuilding(Building* b, UnitType type)
 {
     Vector2 basePos = b->GetSpawnPosition();
 
@@ -244,9 +250,10 @@ void World::SpawnUnitFromBuilding(Building* b, UnitType type)
         if (!IsPositionOccupied(candidate, 32.0f))
         {
             units.emplace_back(type, candidate);
-            return;
+            return true;
         }
     }
+    return false;
 }
 
 bool World::IsPositionOccupied(Vector2 pos, float radius) const

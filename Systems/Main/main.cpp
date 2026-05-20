@@ -2,7 +2,7 @@
 #include "../Game/Game.hpp"
 int main()
 {
-    InitWindow(1280, 720, "aoe2");
+    InitWindow(1920, 1080, "aoe2");
     SetTargetFPS(60);
 
     Game game;

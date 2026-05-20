@@ -23,7 +23,7 @@ class World
 		Rectangle GetSelectionRectangle() const;
 		void HandleSingleClick(Vector2 mousePos);
 		Building* GetSelectedBuilding();
-		void SpawnUnitFromBuilding(Building* b, UnitType type);
+		bool SpawnUnitFromBuilding(Building* b, UnitType type);
 		bool IsPositionOccupied(Vector2 pos, float radius) const;
 		
 	private:

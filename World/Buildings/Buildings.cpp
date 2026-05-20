@@ -77,7 +77,7 @@ void BuildingDatabase::Init()
         60.f,
         3.f,
         1.5f,
-        LoadTexture("World/Assets/stable.png")
+        LoadTexture("World/Assets/Stable.png")
     };
 
     data[BuildingType::Towncenter] = {
@@ -86,7 +86,7 @@ void BuildingDatabase::Init()
         90.f,
         10.f,
         1.8f,
-        LoadTexture("World/Assets/towncenter.png")
+        LoadTexture("World/Assets/Towncenter.png")
     };
 
     data[BuildingType::Tower] = {
@@ -113,6 +113,6 @@ Vector2 Building::GetSpawnPosition() const
 {
     return Vector2{
         position.x + 80.0f,
-        position.y
+        position.y + 200.0f
     };
 }
