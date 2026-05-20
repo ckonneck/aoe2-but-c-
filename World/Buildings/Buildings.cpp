@@ -103,7 +103,7 @@ void BuildingDatabase::Init()
         6.0f,
         LoadTexture("World/Assets/tower.png"),
         {
-            
+
         }
     };
 }
@@ -124,4 +124,14 @@ Vector2 Building::GetSpawnPosition() const
         position.x + 80.0f,
         position.y + 200.0f
     };
+}
+
+UnitType Building::GetCurrentProduction() const
+{
+    if (productionQueue.empty())
+    {
+        return UnitType::None;
+    }
+
+    return productionQueue.front();
 }

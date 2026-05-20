@@ -85,36 +85,25 @@ void UI::Update()
         buttons[i].rect.width = size;
         buttons[i].rect.height = size;
     }
-
-    if (selectedBuilding &&
-        !buttons.empty())
+    if (selectedBuilding)
     {
-        const BuildingDefinition& def =
-            selectedBuilding
-            ->GetDefinition();
+        UnitType current = selectedBuilding->GetCurrentProduction();
 
-        if (def.name == "Stables")
+        for (UIButton& button : buttons)
         {
-            buttons[0].progress =
-                selectedBuilding
-                ->GetProductionProgress();
+            button.progress = -1.0f;
 
-            buttons[0].queuedCount =
+            if (button.unitType == current)
+            {
+                button.progress =
+                    selectedBuilding
+                    ->GetProductionProgress();
+            }
+
+            button.queuedCount =
                 selectedBuilding
                 ->GetQueuedCount(
-                    UnitType::Knight
-                );
-        }
-        if (def.name == "Towncenter")
-        {
-            buttons[0].progress =
-                selectedBuilding
-                ->GetProductionProgress();
-
-            buttons[0].queuedCount =
-                selectedBuilding
-                ->GetQueuedCount(
-                    UnitType::Villager
+                    button.unitType
                 );
         }
     }

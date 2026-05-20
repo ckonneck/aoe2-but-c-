@@ -18,7 +18,8 @@ enum class UnitType
 {
     Villager,
     Knight,
-    Archer
+    Archer,
+	None
 };
 
 class UnitDefinition

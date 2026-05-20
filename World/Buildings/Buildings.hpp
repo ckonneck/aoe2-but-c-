@@ -58,6 +58,7 @@ class Building
 		void StartProduction(UnitType type);
 		bool IsProducing() const;
 		int GetQueuedCount(UnitType type) const;
+		UnitType GetCurrentProduction() const;
 	private:
 		std::queue<UnitType> productionQueue;
 		float productionTimer;
