@@ -45,24 +45,25 @@ void UnitDatabase::Init()
         3.f,
         1.5f,
         3.0f,
-        LoadTexture("World/Assets/Villager.png"),
+        LoadTexture("World/Assets/Units/Villager.png"),
         {
             ActionType::BuildHouse,
             ActionType::BuildFarm,
             ActionType::BuildBarracks,
             ActionType::BuildTowncenter,
-            ActionType::BuildStables
+            ActionType::BuildStables,
+            ActionType::BuildTower
         }
     };
 
     data[UnitType::Knight] = {
         "Knight",
         100.f,
-        300.f,
+        500.f,
         10.f,
         1.8f,
         2.0f,
-        LoadTexture("World/Assets/Knight.png"),
+        LoadTexture("World/Assets/Units/Knight.png"),
         {}
     };
 
@@ -73,7 +74,7 @@ void UnitDatabase::Init()
         6.f,
         6.0f,
         3.0f,
-        LoadTexture("World/Assets/archer.png"),
+        LoadTexture("World/Assets/Units/archer.png"),
         {}
     };
 }
@@ -85,7 +86,7 @@ void ActionDatabase::Init()
     {
         "House",
         LoadTexture(
-            "World/Assets/House.png"
+            "World/Assets/Icons/example.png"
         ),
         BuildingType::House
     };
@@ -94,7 +95,7 @@ void ActionDatabase::Init()
     {
         "Farm",
         LoadTexture(
-            "World/Assets/Farm.png"
+            "World/Assets/Icons/example.png"
         ),
         BuildingType::Farm
     };
@@ -103,7 +104,7 @@ void ActionDatabase::Init()
     {
         "Towncenter",
         LoadTexture(
-            "World/Assets/Towncenter.png"
+            "World/Assets/Icons/example.png"
         ),
         BuildingType::Towncenter
     };
@@ -112,7 +113,7 @@ void ActionDatabase::Init()
     {
         "Stables",
         LoadTexture(
-            "World/Assets/Stable.png"
+            "World/Assets/Icons/example.png"
         ),
         BuildingType::Stables
     };
@@ -121,21 +122,21 @@ void ActionDatabase::Init()
     {
         "Tower",
         LoadTexture(
-            "World/Assets/Tower.png"
+            "World/Assets/Icons/example.png"
         ),
         BuildingType::Tower
     };
     data[ActionType::BuildBarracks] =
     {
         "Barracks",
-        LoadTexture("World/Assets/Barracks.png"),
-        BuildingType::None // or BuildingType::Barracks if exists
+        LoadTexture("World/Assets/Icons/example.png"),
+        BuildingType::Barracks
     };
 
     data[ActionType::Repair] =
     {
         "Repair",
-        LoadTexture("World/Assets/Repair.png"),
+        LoadTexture("World/Assets/Icons/example.png"),
         BuildingType::None
     };
 }

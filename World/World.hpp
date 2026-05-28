@@ -8,12 +8,12 @@
 #include "Buildings/Buildings.hpp"
 #include "UI/UI.hpp"
 #include "Map/Map.hpp"
-class Unit;
-class Building;
 enum class BuildingType;
-class UI;
 enum class UnitType;
-
+class Building;
+class Unit;
+class UI;
+class BuildSystem;
 class Map;
 class World
 {
@@ -32,6 +32,7 @@ class World
 		bool IsPositionOccupied(Vector2 pos, float radius) const;
 		void SetUI(UI* ui);
 		void HandleUnitAction(Unit* unit,ActionType action);
+		void SetBuildSystem(BuildSystem* bs);
 		
 	private:
 		std::vector<Building> buildings;
@@ -42,4 +43,5 @@ class World
 		UI* ui = nullptr;
 		// Texture2D mapTexture;
 		Map map;
+		BuildSystem *buildSystem;
 };	

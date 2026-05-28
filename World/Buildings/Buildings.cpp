@@ -13,7 +13,6 @@ Building::Building(BuildingType type, Vector2 spawnPosition)
     productionTimer = 0.0f;
     productionDuration = 0.0f;
     hp = definition->maxHp;
-    speed = definition->moveSpeed;
 
     state = BuildingState::Idle;
 }
@@ -73,11 +72,10 @@ void BuildingDatabase::Init()
 {
     data[BuildingType::Stables] = {
         "Stables",
-        25.f,
-        60.f,
-        3.f,
-        1.5f,
-        LoadTexture("World/Assets/Stable.png"),
+        100.f,
+        0.0f,
+        0.0f,
+        LoadTexture("World/Assets/Buildings/Stable.png"),
         {
             UnitType::Knight
         }
@@ -86,10 +84,9 @@ void BuildingDatabase::Init()
     data[BuildingType::Towncenter] = {
         "Towncenter",
         100.f,
-        90.f,
-        10.f,
-        1.8f,
-        LoadTexture("World/Assets/Towncenter.png"),
+        10.0f,
+        10.0f,
+        LoadTexture("World/Assets/Buildings/Towncenter.png"),
         {
         UnitType::Villager
         }
@@ -97,11 +94,41 @@ void BuildingDatabase::Init()
 
     data[BuildingType::Tower] = {
         "Tower",
+        80.f,
+        10.0f,
+        10.0f,
+        LoadTexture("World/Assets/Buildings/Tower.png"),
+        {
+
+        }
+    };
+        data[BuildingType::House] = {
+        "House",
         40.f,
-        70.f,
-        6.f,
-        6.0f,
-        LoadTexture("World/Assets/tower.png"),
+        0.0f,
+        0.0f,
+        LoadTexture("World/Assets/Buildings/House.png"),
+        {
+
+        }
+    };
+
+        data[BuildingType::Farm] = {
+        "Farm",
+        40.f,
+        0.0f,
+        0.0f,
+        LoadTexture("World/Assets/Buildings/Flowers.png"),
+        {
+
+        }
+    };
+        data[BuildingType::Barracks] = {
+        "Barracks",
+        80.f,
+        0.0f,
+        0.0f,
+        LoadTexture("World/Assets/Buildings/Barracks.png"),
         {
 
         }

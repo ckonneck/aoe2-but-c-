@@ -13,4 +13,5 @@ class Game
     private:
         World world;
         UI ui;
+        BuildSystem buildSystem;
 };

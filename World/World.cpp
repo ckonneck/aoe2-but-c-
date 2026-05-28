@@ -9,7 +9,7 @@ void World::Init()
     // }
     // for (float x= 0; x < 3000; x++)
     // {
-    //     SpawnUnit(UnitType::Villager, Vector2{500, 400});
+    //     SpawnUnit(UnitType::Knight, Vector2{500, 400});
     // }
     SpawnUnit(UnitType::Villager, Vector2{700, 300});
     SpawnUnit(UnitType::Villager, Vector2{800, 300});
@@ -74,6 +74,7 @@ void World::Render()
 
 void World::HandleInput()
 {
+    
     // Begin drag
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
@@ -324,7 +325,8 @@ void World::HandleUnitAction(
             );
 
             unit->SetAction(action);
-
+            if (buildSystem)
+                buildSystem->Start(BuildingType::House);
             break;
         }
 
@@ -335,7 +337,8 @@ void World::HandleUnitAction(
             );
 
             unit->SetAction(action);
-
+            if (buildSystem)
+                buildSystem->Start(BuildingType::Farm);
             break;
         }
 
@@ -346,7 +349,8 @@ void World::HandleUnitAction(
             );
 
             unit->SetAction(action);
-
+            if (buildSystem)
+                buildSystem->Start(BuildingType::Stables);
             break;
         }
 
@@ -357,6 +361,8 @@ void World::HandleUnitAction(
             );
 
             unit->SetAction(action);
+            if (buildSystem)
+                buildSystem->Start(BuildingType::Towncenter);
 
             break;
         }
@@ -368,6 +374,8 @@ void World::HandleUnitAction(
             );
 
             unit->SetAction(action);
+            if (buildSystem)
+                buildSystem->Start(BuildingType::Tower);
 
             break;
         }
@@ -379,7 +387,8 @@ void World::HandleUnitAction(
             );
 
             unit->SetAction(action);
-
+            if (buildSystem)
+                buildSystem->Start(BuildingType::Barracks);
             break;
         }
         
@@ -397,3 +406,7 @@ void World::HandleUnitAction(
     }
 }
 
+void World::SetBuildSystem(BuildSystem* bs)
+{
+    buildSystem = bs;
+}

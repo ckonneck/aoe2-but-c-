@@ -5,6 +5,8 @@
 #include "Units/Unit.hpp"
 #include <queue>
 #include <vector>
+
+class World;
 class Unit;
 enum class UnitType;
 
@@ -21,7 +23,8 @@ enum class BuildingType
     Towncenter,
     Tower,
 	House,
-	Farm
+	Farm,
+	Barracks
 };
 
 class BuildingDefinition
@@ -30,7 +33,6 @@ class BuildingDefinition
 		std::string name;
 
 		float maxHp;
-		float moveSpeed;
 		float attackDamage;
 		float attackRange;
 
@@ -85,3 +87,21 @@ class BuildingDatabase
 		static std::unordered_map<BuildingType, BuildingDefinition> data;
 };
 
+
+class BuildSystem
+{
+public:
+    void Start(BuildingType type);
+    void Cancel();
+    void Update(float dt);
+    void RenderGhost();
+	void SetWorld(World* w);
+    bool IsActive() const { return active; }
+
+private:
+    BuildingType pending = BuildingType::None;
+    bool active = false;
+	World* world = nullptr;
+    Vector2 ghostPosition;
+	float buildTimer;
+};

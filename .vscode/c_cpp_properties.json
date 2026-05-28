@@ -9,7 +9,6 @@
             "includePath": [
                 "${workspaceFolder}",
                 "${workspaceFolder}/Systems/**",
-                "${workspaceFolder}/Renderer/**",
 				"${workspaceFolder}/World/**",
                 "${workspaceFolder}/raylib/src"
             ]

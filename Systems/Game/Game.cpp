@@ -6,6 +6,8 @@
 void Game::Render()
 {
 	world.Render();
+	buildSystem.RenderGhost();
+
 	ui.Render();
 	world.SetUI(&ui);
 }
@@ -16,6 +18,8 @@ void Game::Init()
     UnitDatabase::Init();
 	ActionDatabase::Init();
     world.Init();
+	buildSystem.SetWorld(&world);
+	world.SetBuildSystem(&buildSystem);
 	ui.Init();
 	ui.requestSpawnUnit = [this](Building* b, UnitType type)
 	{
@@ -35,10 +39,12 @@ void Game::Init()
 void Game::Update(float dt)
 {
 
-    world.HandleInput();
+	if (!buildSystem.IsActive())
+    	world.HandleInput();
 	world.Update(dt);
 	ui.SetSelectedBuilding(world.GetSelectedBuilding());
 	ui.SetSelectedUnit(world.GetSelectedUnit());
+	buildSystem.Update(dt);
 	ui.Update();
 }
 

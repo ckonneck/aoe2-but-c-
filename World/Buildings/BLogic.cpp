@@ -164,3 +164,71 @@ bool Building::IsInside(Rectangle rect) const
 
     return CheckCollisionPointRec(center,rect);
 }
+
+void BuildSystem::RenderGhost()
+{
+    if (!active) return;
+
+    const BuildingDefinition& def = BuildingDatabase::Get(pending);
+
+    DrawTexture(
+        def.texture,
+        ghostPosition.x,
+        ghostPosition.y,
+        Fade(WHITE, 0.5f)
+    );
+}
+
+void BuildSystem::Start(BuildingType type)
+{
+    pending = type;
+    active = true;
+    ghostPosition = GetMousePosition();
+}
+
+void BuildSystem::Update(float dt)
+{
+    if (!active) return;
+
+    buildTimer += dt;
+
+    Vector2 mouse = GetMousePosition();
+
+    const BuildingDefinition& def = BuildingDatabase::Get(pending);
+
+    Vector2 offset =
+    {
+        def.texture.width * 0.5f,
+        def.texture.height * 0.5f
+    };
+
+    ghostPosition = {
+        mouse.x - offset.x,
+        mouse.y - offset.y
+    };
+
+    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
+    {
+        Cancel();
+        return;
+    }
+
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        world->SpawnBuilding(pending, ghostPosition);
+        Cancel();
+    }
+}
+
+void BuildSystem::SetWorld(World* w)
+{
+    world = w;
+}
+
+
+void BuildSystem::Cancel()
+{
+    active = false;
+    pending = BuildingType::None;
+    buildTimer = 0.0f;
+}
