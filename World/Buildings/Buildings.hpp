@@ -16,9 +16,12 @@ enum class BuildingState
 
 enum class BuildingType
 {
+	None,
     Stables,
     Towncenter,
-    Tower
+    Tower,
+	House,
+	Farm
 };
 
 class BuildingDefinition

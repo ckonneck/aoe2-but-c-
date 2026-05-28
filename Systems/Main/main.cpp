@@ -18,7 +18,7 @@ int main()
         // render frame
         BeginDrawing();
 
-        ClearBackground(GRAY);
+        ClearBackground(BLACK);
 
         game.Render();
 

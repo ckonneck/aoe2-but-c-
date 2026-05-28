@@ -1,9 +1,11 @@
 #include "Units/Unit.hpp"
 
 std::unordered_map<UnitType, UnitDefinition> UnitDatabase::data;
+std::unordered_map<ActionType, ActionDefinition> ActionDatabase::data;
 
 Unit::Unit(UnitType type, Vector2 spawnPosition)
 {
+
     definition = &UnitDatabase::Get(type);
 
     position = spawnPosition;
@@ -43,7 +45,14 @@ void UnitDatabase::Init()
         3.f,
         1.5f,
         3.0f,
-        LoadTexture("World/Assets/Villager.png")
+        LoadTexture("World/Assets/Villager.png"),
+        {
+            ActionType::BuildHouse,
+            ActionType::BuildFarm,
+            ActionType::BuildBarracks,
+            ActionType::BuildTowncenter,
+            ActionType::BuildStables
+        }
     };
 
     data[UnitType::Knight] = {
@@ -53,7 +62,8 @@ void UnitDatabase::Init()
         10.f,
         1.8f,
         2.0f,
-        LoadTexture("World/Assets/Knight.png")
+        LoadTexture("World/Assets/Knight.png"),
+        {}
     };
 
     data[UnitType::Archer] = {
@@ -63,11 +73,80 @@ void UnitDatabase::Init()
         6.f,
         6.0f,
         3.0f,
-        LoadTexture("World/Assets/archer.png")
+        LoadTexture("World/Assets/archer.png"),
+        {}
     };
 }
 
+void ActionDatabase::Init()
+{
+
+    data[ActionType::BuildHouse] =
+    {
+        "House",
+        LoadTexture(
+            "World/Assets/House.png"
+        ),
+        BuildingType::House
+    };
+
+    data[ActionType::BuildFarm] =
+    {
+        "Farm",
+        LoadTexture(
+            "World/Assets/Farm.png"
+        ),
+        BuildingType::Farm
+    };
+
+    data[ActionType::BuildTowncenter] =
+    {
+        "Towncenter",
+        LoadTexture(
+            "World/Assets/Towncenter.png"
+        ),
+        BuildingType::Towncenter
+    };
+
+    data[ActionType::BuildStables] =
+    {
+        "Stables",
+        LoadTexture(
+            "World/Assets/Stable.png"
+        ),
+        BuildingType::Stables
+    };
+
+    data[ActionType::BuildTower] =
+    {
+        "Tower",
+        LoadTexture(
+            "World/Assets/Tower.png"
+        ),
+        BuildingType::Tower
+    };
+    data[ActionType::BuildBarracks] =
+    {
+        "Barracks",
+        LoadTexture("World/Assets/Barracks.png"),
+        BuildingType::None // or BuildingType::Barracks if exists
+    };
+
+    data[ActionType::Repair] =
+    {
+        "Repair",
+        LoadTexture("World/Assets/Repair.png"),
+        BuildingType::None
+    };
+}
+
+
 const UnitDefinition& UnitDatabase::Get(UnitType type)
+{
+    return data.at(type);
+}
+
+const ActionDefinition& ActionDatabase::Get(ActionType type)
 {
     return data.at(type);
 }
@@ -75,4 +154,9 @@ const UnitDefinition& UnitDatabase::Get(UnitType type)
 Vector2 Unit::GetPosition() const
 {
     return position;
+}
+
+void Unit::SetAction(ActionType newAction)
+{
+    currentAction = newAction;
 }

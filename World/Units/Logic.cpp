@@ -18,9 +18,18 @@ void Unit::Update(float dt)
         case UnitState::Attacking:
             Attack(dt);
             break;
+
+        case UnitState::Building:
+            Build(dt);
+            break;
+        case UnitState::Repair:
+            break;
     }
 }
-
+void Unit::Build(float dt)
+{
+    dt = 0;
+}
 void Unit::Move(float dt)
 {
     Vector2 direction;
@@ -88,3 +97,9 @@ bool Unit::IsInside(Rectangle rect) const
 
     return CheckCollisionPointRec(center,rect);
 }
+
+const UnitDefinition& Unit::GetDefinition() const
+{
+    return *definition;
+}
+

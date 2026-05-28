@@ -157,41 +157,67 @@ void UI::Init()
 }
 
 
-void UI::SetSelectedBuilding(Building* b)
-{
-    selectedBuilding = b;
-    Rebuild();
-}
+
 
 void UI::Rebuild()
 {
 
 	buttons.clear();
-	
-    if (!selectedBuilding)
-        return;
 
-    const BuildingDefinition& def = selectedBuilding->GetDefinition();
-
-    for (UnitType type : def.producibleUnits)
+    if (selectedUnit)
     {
-        UIButton button;
+        const UnitDefinition& unitdef = selectedUnit->GetDefinition();
 
-        button.unitType = type;
-
-        const UnitDefinition& unitDef = UnitDatabase::Get(type);
-
-        button.label = unitDef.name.c_str()[0];
-
-        button.onClick = [this, type]()
+        for (ActionType type : unitdef.actions)
         {
-            selectedBuilding
-            ->QueueUnit(type);
-        };
+            UIButton button;
 
-        buttons.push_back(button);
+            button.actionType = type;
+
+            const ActionDefinition&actionDef = ActionDatabase::Get(type);
+
+            button.label =
+                actionDef.name[0];
+
+            button.onClick =
+                [this, type]()
+            {
+                requestAction(
+                    selectedUnit,
+                    type
+                );
+            };
+
+            buttons.push_back(button);
+        }
+
     }
 
+    if (selectedBuilding)
+    {
+        const BuildingDefinition& def = selectedBuilding->GetDefinition();
+
+        for (UnitType type : def.producibleUnits)
+        {
+            UIButton button;
+
+            button.unitType = type;
+
+            const UnitDefinition& unitDef = UnitDatabase::Get(type);
+
+            button.label = unitDef.name.c_str()[0];
+
+            button.onClick = [this, type]()
+            {
+                selectedBuilding
+                ->QueueUnit(type);
+            };
+
+            buttons.push_back(button);
+        }
+
+    }
+    
 }
 
 bool UI::IsMouseInside() const
@@ -200,3 +226,33 @@ bool UI::IsMouseInside() const
 
     return CheckCollisionPointRec(mouse, panel);
 }
+
+void UI::SetSelectedUnit(Unit* u)
+{
+    selectedUnit = u;
+
+    if (u)
+    {
+        selectedBuilding = nullptr;
+    }
+
+    Rebuild();
+}
+
+void UI::SetSelectedBuilding(Building* b)
+{
+    selectedBuilding = b;
+
+    if (b)
+    {
+        selectedUnit = nullptr;
+    }
+
+    Rebuild();
+}
+
+// void UI::SetSelectedBuilding(Building* b)
+// {
+//     selectedBuilding = b;
+//     Rebuild();
+// }

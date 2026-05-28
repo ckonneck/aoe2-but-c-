@@ -1,6 +1,16 @@
 #include "World.hpp"
 void World::Init()
 {
+    map.Init();
+    // mapTexture = LoadTexture("World/Assets/Frisia.png");
+    // for (float x= 0; x < 1024; x++)
+    // {
+    //     SpawnUnit(UnitType::Villager, Vector2{x, 300});
+    // }
+    // for (float x= 0; x < 3000; x++)
+    // {
+    //     SpawnUnit(UnitType::Villager, Vector2{500, 400});
+    // }
     SpawnUnit(UnitType::Villager, Vector2{700, 300});
     SpawnUnit(UnitType::Villager, Vector2{800, 300});
     SpawnUnit(UnitType::Villager, Vector2{900, 300});
@@ -44,6 +54,7 @@ void World::Update(float dt)
 
 void World::Render()
 {
+    map.Render();
 	for (Building& building : buildings)
 	{
 		building.Render();
@@ -52,16 +63,13 @@ void World::Render()
     {
         unit.Render();
     }
-	if (isDragging)
-{
-    Rectangle rect = GetSelectionRectangle();
 
-    DrawRectangleLinesEx(
-        rect,
-        2,
-        GREEN
-    );
-}
+	if (isDragging)
+    {
+        Rectangle rect = GetSelectionRectangle();
+
+        DrawRectangleLinesEx(rect,2,GREEN);
+    }
 }
 
 void World::HandleInput()
@@ -69,10 +77,15 @@ void World::HandleInput()
     // Begin drag
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
-        dragStart = GetMousePosition();
-        dragEnd = dragStart;
+    if (ui && ui->IsMouseInside())
+    {
+        return;
+    }
 
-        isDragging = true;
+    dragStart = GetMousePosition();
+    dragEnd = dragStart;
+
+    isDragging = true;
     }
 
     // Update drag rectangle
@@ -90,7 +103,10 @@ void World::HandleInput()
 
 		if (selectionBox.width < 5.f && selectionBox.height < 5.f)
 		{
-			HandleSingleClick(GetMousePosition());
+			if (!(ui && ui->IsMouseInside()))
+            {
+                HandleSingleClick(GetMousePosition());
+            }
 			return;
 		}
         // clear old selection
@@ -218,6 +234,19 @@ Building* World::GetSelectedBuilding()
 
     return nullptr;
 }
+Unit* World::GetSelectedUnit()
+{
+    for (Unit& unit : units)
+    {
+        if (unit.IsSelected())
+        {
+            return &unit;
+        }
+    }
+
+    return nullptr;
+}
+
 
 bool World::SpawnUnitFromBuilding(Building* b, UnitType type)
 {
@@ -275,3 +304,96 @@ bool World::IsPositionOccupied(Vector2 pos, float radius) const
 
     return false;
 }
+
+void World::SetUI(UI* newUI)
+{
+    ui = newUI;
+}
+
+void World::HandleUnitAction(
+    Unit* unit,
+    ActionType action
+)
+{
+    switch (action)
+    {
+        case ActionType::BuildHouse:
+        {
+            unit->SetState(
+                UnitState::Building
+            );
+
+            unit->SetAction(action);
+
+            break;
+        }
+
+        case ActionType::BuildFarm:
+        {
+            unit->SetState(
+                UnitState::Building
+            );
+
+            unit->SetAction(action);
+
+            break;
+        }
+
+        case ActionType::BuildStables:
+        {
+            unit->SetState(
+                UnitState::Building
+            );
+
+            unit->SetAction(action);
+
+            break;
+        }
+
+        case ActionType::BuildTowncenter:
+        {
+            unit->SetState(
+                UnitState::Building
+            );
+
+            unit->SetAction(action);
+
+            break;
+        }
+
+        case ActionType::BuildTower:
+        {
+            unit->SetState(
+                UnitState::Building
+            );
+
+            unit->SetAction(action);
+
+            break;
+        }
+
+        case ActionType::BuildBarracks:
+        {
+            unit->SetState(
+                UnitState::Building
+            );
+
+            unit->SetAction(action);
+
+            break;
+        }
+        
+        case ActionType::Repair:
+        {
+            unit->SetState(
+                UnitState::Repair
+            );
+
+            unit->SetAction(action);
+
+            break;
+        }
+
+    }
+}
+
