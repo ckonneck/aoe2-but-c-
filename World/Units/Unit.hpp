@@ -24,6 +24,7 @@ enum class ActionType
 	BuildTowncenter,
 	BuildTower,
     BuildStables,
+	BuildTest,
 	Repair
 };
 

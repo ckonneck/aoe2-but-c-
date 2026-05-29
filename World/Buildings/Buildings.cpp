@@ -76,6 +76,8 @@ void BuildingDatabase::Init()
         0.0f,
         0.0f,
         LoadTexture("World/Assets/Buildings/Stable.png"),
+        9,
+        5,
         {
             UnitType::Knight
         }
@@ -87,6 +89,8 @@ void BuildingDatabase::Init()
         10.0f,
         10.0f,
         LoadTexture("World/Assets/Buildings/Towncenter.png"),
+        8,
+        4,
         {
         UnitType::Villager
         }
@@ -98,6 +102,8 @@ void BuildingDatabase::Init()
         10.0f,
         10.0f,
         LoadTexture("World/Assets/Buildings/Tower.png"),
+        3,
+        5,
         {
 
         }
@@ -108,6 +114,8 @@ void BuildingDatabase::Init()
         0.0f,
         0.0f,
         LoadTexture("World/Assets/Buildings/House.png"),
+        5,
+        1,
         {
 
         }
@@ -119,6 +127,8 @@ void BuildingDatabase::Init()
         0.0f,
         0.0f,
         LoadTexture("World/Assets/Buildings/Flowers.png"),
+        4,
+        2,
         {
 
         }
@@ -129,9 +139,24 @@ void BuildingDatabase::Init()
         0.0f,
         0.0f,
         LoadTexture("World/Assets/Buildings/Barracks.png"),
+        9,
+        5,
         {
 
         }
+    };
+    data[BuildingType::Test] = {
+        "Test",
+        80.f,
+        0.0f,
+        0.0f,
+        LoadTexture("World/Assets/Buildings/Test.png"),
+        1,
+        1,
+        {
+
+        }
+
     };
 }
 

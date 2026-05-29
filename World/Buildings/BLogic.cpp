@@ -32,8 +32,7 @@ void Building::Producing(float dt)
 
 bool Building::IsProductionFinished() const
 {
-    return !productionQueue.empty() &&
-           productionTimer >= productionDuration;
+    return !productionQueue.empty() && productionTimer >= productionDuration;
 }
 
 UnitType Building::GetQueuedUnit() const
@@ -167,15 +166,25 @@ bool Building::IsInside(Rectangle rect) const
 
 void BuildSystem::RenderGhost()
 {
-    if (!active) return;
+    if (!active)
+        return;
 
-    const BuildingDefinition& def = BuildingDatabase::Get(pending);
+    const BuildingDefinition& def =
+        BuildingDatabase::Get(pending);
+
+    Color tint =
+        grid.IsOccupied(
+    ghostPosition,
+    def.gridWidth,
+    def.gridHeight)
+        ? Fade(RED, 0.5f)
+        : Fade(GREEN, 0.5f);
 
     DrawTexture(
         def.texture,
         ghostPosition.x,
         ghostPosition.y,
-        Fade(WHITE, 0.5f)
+        tint
     );
 }
 
@@ -183,28 +192,42 @@ void BuildSystem::Start(BuildingType type)
 {
     pending = type;
     active = true;
-    ghostPosition = GetMousePosition();
-}
 
+    const BuildingDefinition& def =
+        BuildingDatabase::Get(pending);
+
+    Vector2 snapped =
+        grid.SnapToGrid(
+            GetMousePosition()
+        );
+
+    ghostPosition =
+    {
+        snapped.x -
+        def.texture.width * 0.5f,
+
+        snapped.y -
+        def.texture.height * 0.5f
+    };
+}
 void BuildSystem::Update(float dt)
 {
     if (!active) return;
 
     buildTimer += dt;
 
-    Vector2 mouse = GetMousePosition();
+    const BuildingDefinition& def =
+        BuildingDatabase::Get(pending);
 
-    const BuildingDefinition& def = BuildingDatabase::Get(pending);
+    Vector2 snapped =
+        grid.SnapToGrid(
+            GetMousePosition()
+        );
 
-    Vector2 offset =
+    ghostPosition =
     {
-        def.texture.width * 0.5f,
-        def.texture.height * 0.5f
-    };
-
-    ghostPosition = {
-        mouse.x - offset.x,
-        mouse.y - offset.y
+        snapped.x - def.texture.width * 0.5f,
+        snapped.y - def.texture.height * 0.5f
     };
 
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON))
@@ -214,10 +237,21 @@ void BuildSystem::Update(float dt)
     }
 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+{
+    if (!grid.IsOccupied(
+        ghostPosition,
+        def.gridWidth,
+        def.gridHeight))
     {
-        world->SpawnBuilding(pending, ghostPosition);
+        world->SpawnBuilding(
+            pending,
+            ghostPosition,
+            grid
+        );
+
         Cancel();
     }
+}
 }
 
 void BuildSystem::SetWorld(World* w)

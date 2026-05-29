@@ -5,9 +5,10 @@
 #include "Units/Unit.hpp"
 #include <queue>
 #include <vector>
-
+#include "Game/GridSystem.hpp"
 class World;
 class Unit;
+class GridSystem;
 enum class UnitType;
 
 enum class BuildingState
@@ -24,7 +25,8 @@ enum class BuildingType
     Tower,
 	House,
 	Farm,
-	Barracks
+	Barracks,
+	Test
 };
 
 class BuildingDefinition
@@ -37,6 +39,9 @@ class BuildingDefinition
 		float attackRange;
 
 		Texture2D texture;
+
+		int gridWidth;
+        int gridHeight;
 		std::vector<UnitType>producibleUnits;
 };
 
@@ -104,4 +109,5 @@ private:
 	World* world = nullptr;
     Vector2 ghostPosition;
 	float buildTimer;
+	GridSystem grid;
 };

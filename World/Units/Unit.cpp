@@ -52,7 +52,9 @@ void UnitDatabase::Init()
             ActionType::BuildBarracks,
             ActionType::BuildTowncenter,
             ActionType::BuildStables,
-            ActionType::BuildTower
+            ActionType::BuildTower,
+            ActionType::BuildTest
+
         }
     };
 
@@ -133,6 +135,12 @@ void ActionDatabase::Init()
         BuildingType::Barracks
     };
 
+    data[ActionType::BuildTest] =
+    {
+        "Test",
+        LoadTexture("World/Assets/Icons/example.png"),
+        BuildingType::Test
+    };
     data[ActionType::Repair] =
     {
         "Repair",

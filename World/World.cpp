@@ -11,24 +11,53 @@ void World::Init()
     // {
     //     SpawnUnit(UnitType::Knight, Vector2{500, 400});
     // }
+    SpawnUnit(UnitType::Villager, Vector2{600, 300});
     SpawnUnit(UnitType::Villager, Vector2{700, 300});
     SpawnUnit(UnitType::Villager, Vector2{800, 300});
     SpawnUnit(UnitType::Villager, Vector2{900, 300});
-    SpawnUnit(UnitType::Villager, Vector2{600, 300});
     SpawnUnit(UnitType::Villager, Vector2{1000, 300});
-	SpawnBuilding(BuildingType::Towncenter, Vector2{200, 200});
-    SpawnBuilding(BuildingType::Towncenter, Vector2{400, 400});
-    SpawnBuilding(BuildingType::Stables, Vector2{600, 600});
+    const BuildingDefinition& def =
+        BuildingDatabase::Get(
+            BuildingType::Towncenter
+        );
+
+    Vector2 pos =
+    {
+        650 - def.texture.width * 0.5f,
+        350 - def.texture.height * 0.5f
+    };
+
+    SpawnBuilding(
+        BuildingType::Towncenter,
+        pos,
+        grid
+    );
+
 }
 
 void World::SpawnUnit(UnitType type, Vector2 position)
 {
     units.emplace_back(type, position);
 }
-
-void World::SpawnBuilding(BuildingType type, Vector2 position)
+void World::SpawnBuilding(
+    BuildingType type,
+    Vector2 position,
+    GridSystem& grid
+)
 {
-    buildings.emplace_back(type, position);
+    const BuildingDefinition& def =
+        BuildingDatabase::Get(type);
+
+    buildings.emplace_back(
+        type,
+        position
+    );
+
+    grid.Occupy(
+        position,
+        def.gridWidth,
+        def.gridHeight
+    );
 }
 
 void World::Update(float dt)
@@ -391,7 +420,17 @@ void World::HandleUnitAction(
                 buildSystem->Start(BuildingType::Barracks);
             break;
         }
-        
+        case ActionType::BuildTest:
+        {
+            unit->SetState(
+                UnitState::Building
+            );
+
+            unit->SetAction(action);
+            if (buildSystem)
+                buildSystem->Start(BuildingType::Test);
+            break;
+        }
         case ActionType::Repair:
         {
             unit->SetState(
@@ -409,4 +448,9 @@ void World::HandleUnitAction(
 void World::SetBuildSystem(BuildSystem* bs)
 {
     buildSystem = bs;
+}
+
+GridSystem& World::GetGrid()
+{
+    return grid;
 }

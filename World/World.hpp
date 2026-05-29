@@ -8,6 +8,8 @@
 #include "Buildings/Buildings.hpp"
 #include "UI/UI.hpp"
 #include "Map/Map.hpp"
+#include "Game/GridSystem.hpp"
+
 enum class BuildingType;
 enum class UnitType;
 class Building;
@@ -22,7 +24,7 @@ class World
 		void Update(float dt);
 		void Render();
 		void SpawnUnit(UnitType type, Vector2 position);
-		void SpawnBuilding(BuildingType type, Vector2 position);
+		void SpawnBuilding(BuildingType type,Vector2 position,GridSystem& grid);
 		void HandleInput();
 		Rectangle GetSelectionRectangle() const;
 		void HandleSingleClick(Vector2 mousePos);
@@ -33,6 +35,7 @@ class World
 		void SetUI(UI* ui);
 		void HandleUnitAction(Unit* unit,ActionType action);
 		void SetBuildSystem(BuildSystem* bs);
+		GridSystem& GetGrid();
 		
 	private:
 		std::vector<Building> buildings;
@@ -44,4 +47,5 @@ class World
 		// Texture2D mapTexture;
 		Map map;
 		BuildSystem *buildSystem;
+		GridSystem grid;
 };	
